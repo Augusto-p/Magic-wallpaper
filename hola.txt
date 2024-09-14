@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Verificar si el grupo WMagic ya existe
+if ! getent group WMagic >/dev/null; then
+    # Si no existe, crear el grupo
+    groupadd WMagic
+    echo "Grupo WMagic creado exitosamente."
+else
+    echo "El grupo WMagic ya existe."
+fi
+
+# Si tienes otros comandos como habilitar servicios, puedes agregarlos aquí
+systemctl enable WMagicWeb.service
+systemctl enable WMagicOff.service
+
+exit 0
+
+
+package: wmagicVersion: 1.0.0Section: basePriority: optionalArchitecture: amd64Depends: bash, systemdMaintainer: Tu Nombre <tuemail@example.com>Description: WMagic - Un conjunto de herramientas m%C3%A1gicas.
+
+dpkg-deb --build WMagic_1.0.0-amd64
+sudo dpkg -i WMagic_1.0.0-amd64.deb
+getent group WMagic
