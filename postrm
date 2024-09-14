@@ -1,0 +1,45 @@
+#!/bin/bash
+
+case "$1" in
+    remove)
+        # Detener y deshabilitar los servicios antes de eliminarlos
+        systemctl stop WMagicWeb.service
+        systemctl stop WMagicOff.service
+
+        systemctl disable WMagicWeb.service
+        systemctl disable WMagicOff.service
+
+        # Eliminar los archivos de servicio si existen
+        rm -f /lib/systemd/system/WMagicWeb.service
+        rm -f /lib/systemd/system/WMagicOff.service
+
+        echo "Servicios de WMagic eliminados."
+
+        # Eliminar scripts y herramientas si existen
+        rm -f /usr/local/bin/WMagic.sh
+        rm -rf /opt/WMagic/tools
+        echo "Scripts y herramientas eliminados."
+        ;;
+    
+    purge)
+        # Este bloque se ejecuta cuando el paquete se purga (eliminación total)
+        # Primero se hace lo que está en 'remove'
+        
+        # Eliminar el grupo WMagic
+        if getent group WMagic >/dev/null; then
+            groupdel WMagic
+            echo "Grupo WMagic eliminado."
+        fi
+        
+        # Asegurarse de eliminar el directorio WMagic por completo
+        rm -rf /opt/WMagic
+        echo "Directorio /opt/WMagic eliminado."
+        ;;
+esac
+
+exit 0
+
+
+
+chmod 755 WMagic_1.0.0-amd64/DEBIAN/postrm
+
